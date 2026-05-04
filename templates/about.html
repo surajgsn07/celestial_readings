@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block title %}About — Celestial Readings{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+    <div class="container">
+        <span class="section-label">Our Story</span>
+        <h1>The Astrologer Behind the Magic</h1>
+        <p>A journey from stargazing to star-reading — how Celestial Readings came to be</p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="about-grid animate-in">
+            <div class="about-image">
+                <div class="glass-card" style="padding:var(--space-3xl);text-align:center;">
+                    <div style="width:160px;height:160px;border-radius:50%;margin:0 auto var(--space-xl);background:linear-gradient(135deg, rgba(212,168,83,0.2), rgba(200,162,232,0.2));display:flex;align-items:center;justify-content:center;border:2px solid rgba(212,168,83,0.3);">
+                        <i data-lucide="sparkles" style="width:64px;height:64px;color:var(--gold);"></i>
+                    </div>
+                    <h3 style="color:var(--gold);font-size:1.3rem;margin-bottom:var(--space-sm);">The Astrologer</h3>
+                    <p style="font-size:0.85rem;color:var(--text-muted);margin:0 auto;">Vedic Astrologer · Tarot Reader · Spiritual Guide</p>
+                    <div style="display:flex;gap:var(--space-md);justify-content:center;margin-top:var(--space-xl);">
+                        <div style="text-align:center;">
+                            <div style="font-family:var(--font-heading);font-size:1.5rem;color:var(--gold);">500+</div>
+                            <div style="font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;">Readings</div>
+                        </div>
+                        <div style="width:1px;background:var(--glass-border);"></div>
+                        <div style="text-align:center;">
+                            <div style="font-family:var(--font-heading);font-size:1.5rem;color:var(--gold);">5+</div>
+                            <div style="font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;">Years</div>
+                        </div>
+                        <div style="width:1px;background:var(--glass-border);"></div>
+                        <div style="text-align:center;">
+                            <div style="font-family:var(--font-heading);font-size:1.5rem;color:var(--gold);">4.9★</div>
+                            <div style="font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;">Rating</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="about-text">
+                <span class="section-label">My Journey</span>
+                <h2>From Starlight to Soul Light</h2>
+                <p>My journey into the mystical arts began under the vast canopy of stars during childhood nights spent wondering about the cosmos and its infinite wisdom. What started as curiosity blossomed into a lifelong calling.</p>
+                <p>After years of studying Vedic astrology, tarot, and various spiritual traditions, I founded Celestial Readings — a sanctuary where ancient celestial wisdom meets modern understanding. Each reading I offer is infused with deep intuition, scholarly knowledge, and genuine care for every soul who seeks guidance.</p>
+                <p>I believe that the stars don't dictate our fate — they illuminate our choices. My mission is to help you see the paths available to you and empower you to choose with clarity, confidence, and cosmic awareness.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Philosophy Section -->
+<section class="section">
+    <div class="container">
+        <div class="section-header animate-in">
+            <span class="section-label">My Philosophy</span>
+            <h2>Guiding Principles</h2>
+            <p>The core values that shape every reading and interaction</p>
+        </div>
+
+        <div class="philosophy-cards">
+            <div class="glass-card philosophy-card animate-in">
+                <div class="icon"><i data-lucide="eye" style="width:32px;height:32px;"></i></div>
+                <h4>Intuitive Clarity</h4>
+                <p>Every reading is guided by deep intuition refined through years of practice and spiritual dedication.</p>
+            </div>
+            <div class="glass-card philosophy-card animate-in">
+                <div class="icon"><i data-lucide="shield" style="width:32px;height:32px;"></i></div>
+                <h4>Sacred Confidentiality</h4>
+                <p>Your stories, struggles, and revelations are held in the highest confidence. This is a safe space.</p>
+            </div>
+            <div class="glass-card philosophy-card animate-in">
+                <div class="icon"><i data-lucide="heart" style="width:32px;height:32px;"></i></div>
+                <h4>Compassionate Guidance</h4>
+                <p>Truth delivered with kindness. I believe in empowering, not alarming — uplifting, not unsettling.</p>
+            </div>
+            <div class="glass-card philosophy-card animate-in">
+                <div class="icon"><i data-lucide="book-open" style="width:32px;height:32px;"></i></div>
+                <h4>Ancient Wisdom</h4>
+                <p>Rooted in Vedic traditions and time-tested astrological methods passed down through generations.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+    <div class="container">
+        <div class="cta-box animate-in">
+            <span class="section-label">Let's Connect</span>
+            <h2>Ready to Explore Your Stars?</h2>
+            <p>Every great journey begins with a single step — or in our case, a single card</p>
+            <a href="{{ url_for('booking') }}" class="btn btn-primary btn-lg">
+                <i data-lucide="sparkles" style="width:18px;height:18px;"></i>
+                Book a Reading
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

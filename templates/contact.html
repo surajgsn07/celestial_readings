@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block title %}Contact — Celestial Readings{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+    <div class="container">
+        <span class="section-label">Get in Touch</span>
+        <h1>Contact Us</h1>
+        <p>We'd love to hear from you — reach out through the stars ✨</p>
+    </div>
+</section>
+
+<section class="section" style="padding-top:0;">
+    <div class="container">
+        <div class="contact-grid">
+            <div class="glass-card animate-in">
+                <h3 style="margin-bottom:var(--space-xl);color:var(--gold);">Send a Message</h3>
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label for="contactName">Your Name *</label>
+                        <input type="text" id="contactName" class="form-control" placeholder="Enter your name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactEmail">Email Address *</label>
+                        <input type="email" id="contactEmail" class="form-control" placeholder="your@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactMessage">Your Message *</label>
+                        <textarea id="contactMessage" class="form-control" placeholder="Tell us what's on your mind..." rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg" id="contactSubmitBtn" style="width:100%;justify-content:center;">
+                        <i data-lucide="send" style="width:16px;height:16px;"></i>
+                        Send Message
+                    </button>
+                </form>
+                <div id="contactSuccess" style="display:none;text-align:center;padding:var(--space-2xl);">
+                    <i data-lucide="check-circle" style="width:48px;height:48px;color:#6fdc8c;margin-bottom:var(--space-md);"></i>
+                    <h3 style="color:#6fdc8c;margin-bottom:var(--space-sm);">Message Sent!</h3>
+                    <p style="font-size:0.9rem;">Thank you for reaching out. We'll get back to you soon ✨</p>
+                </div>
+            </div>
+
+            <div class="contact-info animate-in">
+                <h3>Let's Connect</h3>
+                <p>Whether you have a question about a service, need guidance on choosing the right reading, or just want to say hello — I'm here for you.</p>
+
+                <div class="glass-card" style="margin-top:var(--space-xl);padding:var(--space-xl);">
+                    <div style="display:flex;align-items:center;gap:var(--space-md);margin-bottom:var(--space-lg);">
+                        <div style="width:40px;height:40px;border-radius:50%;background:rgba(212,168,83,0.1);border:1px solid rgba(212,168,83,0.2);display:flex;align-items:center;justify-content:center;color:var(--gold);">
+                            <i data-lucide="mail" style="width:18px;height:18px;"></i>
+                        </div>
+                        <div>
+                            <div style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;">Email</div>
+                            <div style="color:var(--cream);font-size:0.9rem;">hello@celestialreadings.com</div>
+                        </div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:var(--space-md);margin-bottom:var(--space-lg);">
+                        <div style="width:40px;height:40px;border-radius:50%;background:rgba(212,168,83,0.1);border:1px solid rgba(212,168,83,0.2);display:flex;align-items:center;justify-content:center;color:var(--gold);">
+                            <i data-lucide="instagram" style="width:18px;height:18px;"></i>
+                        </div>
+                        <div>
+                            <div style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;">Instagram</div>
+                            <a href="#" style="color:var(--cream);font-size:0.9rem;">@celestialreadings</a>
+                        </div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:var(--space-md);">
+                        <div style="width:40px;height:40px;border-radius:50%;background:rgba(212,168,83,0.1);border:1px solid rgba(212,168,83,0.2);display:flex;align-items:center;justify-content:center;color:var(--gold);">
+                            <i data-lucide="clock" style="width:18px;height:18px;"></i>
+                        </div>
+                        <div>
+                            <div style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;">Availability</div>
+                            <div style="color:var(--cream);font-size:0.9rem;">Mon - Sat, 10 AM - 7 PM IST</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="social-links" style="margin-top:var(--space-xl);">
+                    <a href="#" class="social-link" aria-label="Instagram"><i data-lucide="instagram" style="width:20px;height:20px;"></i></a>
+                    <a href="#" class="social-link" aria-label="Twitter"><i data-lucide="twitter" style="width:20px;height:20px;"></i></a>
+                    <a href="#" class="social-link" aria-label="YouTube"><i data-lucide="youtube" style="width:20px;height:20px;"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('contactForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('contactSubmitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner" style="width:20px;height:20px;border-width:2px;margin:0;"></span> Sending...';
+
+    try {
+        const res = await fetch('/api/contact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                name: document.getElementById('contactName').value,
+                email: document.getElementById('contactEmail').value,
+                message: document.getElementById('contactMessage').value,
+            }),
+        });
+
+        if (res.ok) {
+            document.getElementById('contactForm').style.display = 'none';
+            document.getElementById('contactSuccess').style.display = 'block';
+            lucide.createIcons();
+        } else {
+            const data = await res.json();
+            showToast(data.error || 'Something went wrong', 'error');
+            btn.disabled = false;
+            btn.innerHTML = '<i data-lucide="send" style="width:16px;height:16px;"></i> Send Message';
+            lucide.createIcons();
+        }
+    } catch (err) {
+        showToast('Network error. Please try again.', 'error');
+        btn.disabled = false;
+        btn.innerHTML = '<i data-lucide="send" style="width:16px;height:16px;"></i> Send Message';
+        lucide.createIcons();
+    }
+});
+</script>
+{% endblock %}

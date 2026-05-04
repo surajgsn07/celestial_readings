@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block title %}Complete Payment — Celestial Readings{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+    <div class="container">
+        <span class="section-label">Almost There</span>
+        <h1>Complete Payment</h1>
+        <p>Pay via UPI to secure your celestial reading</p>
+    </div>
+</section>
+
+<section class="section" style="padding-top:0;">
+    <div class="container">
+        <div class="glass-card confirm-card">
+            <div class="icon-large" style="background:linear-gradient(135deg,rgba(212,168,83,0.15),rgba(200,162,232,0.1));color:var(--gold);border:1px solid rgba(212,168,83,0.3);">
+                <i data-lucide="sparkles" style="width:36px;height:36px;"></i>
+            </div>
+            <h3 style="margin-bottom:var(--space-sm);">Booking Summary</h3>
+            <p style="color:var(--text-muted);font-size:0.9rem;margin:0 auto var(--space-lg);">Review your details and pay via UPI</p>
+
+            <div class="confirm-details">
+                <div class="detail-row">
+                    <span class="detail-label">Service</span>
+                    <span class="detail-value">{{ booking.service.name }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Date</span>
+                    <span class="detail-value">{{ booking.booking_date.strftime('%B %d, %Y') }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Time</span>
+                    <span class="detail-value">{{ booking.time_slot }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Duration</span>
+                    <span class="detail-value">{{ booking.service.duration }} minutes</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Name</span>
+                    <span class="detail-value">{{ booking.customer_name }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Email</span>
+                    <span class="detail-value">{{ booking.email }}</span>
+                </div>
+                <div class="detail-row total">
+                    <span class="detail-label">Amount</span>
+                    <span class="detail-value">₹{{ "%.0f"|format(booking.amount) }}</span>
+                </div>
+            </div>
+
+            <!-- ─── UPI Payment Section ─── -->
+            <div style="margin-top:var(--space-2xl);padding:var(--space-xl);background:rgba(212,168,83,0.06);border-radius:var(--radius-md);border:1px solid rgba(212,168,83,0.15);">
+                <h4 style="text-align:center;margin-bottom:var(--space-xs);color:var(--cream);">
+                    <i data-lucide="smartphone" style="width:20px;height:20px;vertical-align:middle;margin-right:6px;"></i>
+                    Pay via UPI
+                </h4>
+                <p style="text-align:center;font-size:0.85rem;color:var(--text-muted);margin-bottom:var(--space-lg);">
+                    Tap the button below to open your UPI app with the amount pre-filled
+                </p>
+
+                <!-- UPI Intent Button -->
+                <a href="upi://pay?pa={{ upi_id }}&pn={{ upi_name | urlencode }}&am={{ '%.2f'|format(booking.amount) }}&cu=INR&tn=Booking%20%23{{ booking.id }}%20-%20{{ booking.service.name | urlencode }}"
+                   class="btn btn-primary btn-lg" id="upiPayBtn"
+                   style="width:100%;justify-content:center;font-size:1.1rem;padding:var(--space-md) var(--space-xl);margin-bottom:var(--space-md);">
+                    <i data-lucide="wallet" style="width:20px;height:20px;"></i>
+                    Pay ₹{{ "%.0f"|format(booking.amount) }} via UPI
+                </a>
+
+                <p style="text-align:center;font-size:0.75rem;color:var(--text-muted);margin:0;">
+                    Opens GPay, PhonePe, Paytm, or any UPI app installed on your phone
+                </p>
+            </div>
+
+            <!-- ─── Transaction ID Section ─── -->
+            <div style="margin-top:var(--space-xl);padding:var(--space-xl);background:rgba(200,162,232,0.06);border-radius:var(--radius-md);border:1px solid rgba(200,162,232,0.15);">
+                <h4 style="text-align:center;margin-bottom:var(--space-xs);color:var(--cream);">
+                    <i data-lucide="check-circle" style="width:20px;height:20px;vertical-align:middle;margin-right:6px;"></i>
+                    After Payment
+                </h4>
+                <p style="text-align:center;font-size:0.85rem;color:var(--text-muted);margin-bottom:var(--space-lg);">
+                    Enter your UPI Transaction ID (UTR / Reference Number) from the payment confirmation
+                </p>
+
+                <div style="margin-bottom:var(--space-md);">
+                    <input type="text" id="transactionId" class="form-input"
+                           placeholder="e.g. 123456789012 or UPI Ref No."
+                           style="width:100%;text-align:center;font-size:1rem;letter-spacing:1px;"
+                           maxlength="50" autocomplete="off">
+                </div>
+
+                <button class="btn btn-primary btn-lg" id="submitProofBtn"
+                        style="width:100%;justify-content:center;"
+                        data-booking-id="{{ booking.id }}"
+                        data-whatsapp="{{ whatsapp_number }}"
+                        data-service="{{ booking.service.name }}"
+                        data-amount="{{ '%.0f'|format(booking.amount) }}"
+                        data-customer="{{ booking.customer_name }}">
+                    <i data-lucide="send" style="width:18px;height:18px;"></i>
+                    I Have Paid — Submit Proof
+                </button>
+            </div>
+
+            <!-- ─── Help Text ─── -->
+            <div style="margin-top:var(--space-lg);padding:var(--space-md);background:rgba(111,220,140,0.06);border-radius:var(--radius-md);border:1px solid rgba(111,220,140,0.1);">
+                <p style="font-size:0.8rem;color:var(--text-muted);margin:0;text-align:center;">
+                    <strong style="color:#6fdc8c;">Where to find UTR?</strong> After payment, check your UPI app → Transaction History → Tap the payment → Copy the "UPI Reference" or "Transaction ID"
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/upi-payment.js') }}"></script>
+{% endblock %}

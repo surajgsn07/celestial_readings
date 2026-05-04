@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — Celestial Readings Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body>
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- Admin Nav -->
+    <nav class="navbar scrolled">
+        <div class="nav-container">
+            <a href="{{ url_for('admin_dashboard') }}" class="nav-logo">
+                <i data-lucide="sparkles" class="logo-icon"></i>
+                Celestial Admin
+            </a>
+            <div class="nav-links" style="display:flex;">
+                <a href="{{ url_for('home') }}" target="_blank">View Site</a>
+                <a href="{{ url_for('admin_logout') }}" class="nav-cta" style="background:rgba(220,53,69,0.2);color:#ff6b7a !important;border:1px solid rgba(220,53,69,0.3);box-shadow:none;">
+                    <i data-lucide="log-out" style="width:14px;height:14px;"></i>
+                    Logout
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="page-content">
+        <div class="admin-layout">
+            <div class="container">
+                <!-- Header -->
+                <div style="margin-bottom:var(--space-2xl);">
+                    <h1 style="font-size:2rem;margin-bottom:var(--space-xs);">Dashboard</h1>
+                    <p style="color:var(--text-muted);font-size:0.9rem;">Welcome back, {{ current_user.username }} ✨</p>
+                </div>
+
+                <!-- Stats -->
+                <div class="stats-grid">
+                    <div class="glass-card stat-card">
+                        <div class="stat-value">{{ stats.total }}</div>
+                        <div class="stat-label">Total Bookings</div>
+                    </div>
+                    <div class="glass-card stat-card">
+                        <div class="stat-value" style="color:#fbbf24;">{{ stats.awaiting }}</div>
+                        <div class="stat-label">Awaiting Verification</div>
+                    </div>
+                    <div class="glass-card stat-card">
+                        <div class="stat-value" style="color:var(--lavender);">{{ stats.confirmed }}</div>
+                        <div class="stat-label">Confirmed</div>
+                    </div>
+                    <div class="glass-card stat-card">
+                        <div class="stat-value" style="color:#6fdc8c;">{{ stats.completed }}</div>
+                        <div class="stat-label">Completed</div>
+                    </div>
+                    <div class="glass-card stat-card">
+                        <div class="stat-value">₹{{ "%.0f"|format(stats.revenue) }}</div>
+                        <div class="stat-label">Total Revenue</div>
+                    </div>
+                </div>
+
+                <!-- Bookings Table -->
+                <div style="margin-bottom:var(--space-xl);">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-lg);flex-wrap:wrap;gap:var(--space-md);">
+                        <h3>All Bookings</h3>
+                        <div class="tab-filters">
+                            <button class="tab-filter active" data-filter="all" onclick="filterBookings('all', this)">All</button>
+                            <button class="tab-filter" data-filter="awaiting_verification" onclick="filterBookings('awaiting_verification', this)" style="position:relative;">
+                                ⏳ Awaiting
+                                {% if stats.awaiting > 0 %}
+                                <span style="position:absolute;top:-6px;right:-6px;background:#fbbf24;color:#000;font-size:0.65rem;font-weight:700;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;">{{ stats.awaiting }}</span>
+                                {% endif %}
+                            </button>
+                            <button class="tab-filter" data-filter="pending" onclick="filterBookings('pending', this)">Pending</button>
+                            <button class="tab-filter" data-filter="confirmed" onclick="filterBookings('confirmed', this)">Confirmed</button>
+                            <button class="tab-filter" data-filter="completed" onclick="filterBookings('completed', this)">Completed</button>
+                            <button class="tab-filter" data-filter="cancelled" onclick="filterBookings('cancelled', this)">Cancelled</button>
+                        </div>
+                    </div>
+
+                    {% if bookings %}
+                    <div class="table-wrap glass-card" style="padding:0;">
+                        <table class="data-table" id="bookingsTable">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Customer</th>
+                                    <th>Service</th>
+                                    <th>Date & Time</th>
+                                    <th>Amount</th>
+                                    <th>UTR / Txn ID</th>
+                                    <th>Payment</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for booking in bookings %}
+                                <tr data-status="{{ booking.status }}">
+                                    <td style="color:var(--text-muted);">#{{ booking.id }}</td>
+                                    <td>
+                                        <div style="font-weight:500;color:var(--cream);">{{ booking.customer_name }}</div>
+                                        <div style="font-size:0.75rem;color:var(--text-muted);">{{ booking.email }}</div>
+                                    </td>
+                                    <td>{{ booking.service.name }}</td>
+                                    <td>
+                                        <div>{{ booking.booking_date.strftime('%b %d, %Y') }}</div>
+                                        <div style="font-size:0.8rem;color:var(--text-muted);">{{ booking.time_slot }}</div>
+                                    </td>
+                                    <td style="color:var(--gold);font-family:var(--font-heading);font-size:1.1rem;">₹{{ "%.0f"|format(booking.amount) }}</td>
+                                    <td>
+                                        {% if booking.transaction_id %}
+                                        <span style="font-family:monospace;font-size:0.8rem;color:#fbbf24;letter-spacing:0.5px;">{{ booking.transaction_id }}</span>
+                                        {% else %}
+                                        <span style="font-size:0.8rem;color:var(--text-muted);">—</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-{{ booking.payment_status }}">{{ booking.payment_status }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-{{ booking.status }}">{{ booking.status }}</span>
+                                    </td>
+                                    <td>
+                                        {% if booking.status == 'awaiting_verification' %}
+                                        <button class="btn btn-sm" onclick="verifyPayment({{ booking.id }}, this)"
+                                                style="background:rgba(37,211,102,0.15);color:#25d366;border:1px solid rgba(37,211,102,0.3);font-weight:600;">
+                                            <i data-lucide="check-circle" style="width:12px;height:12px;"></i> Verify Payment
+                                        </button>
+                                        {% elif booking.status == 'confirmed' %}
+                                        <button class="btn btn-success btn-sm" onclick="markComplete({{ booking.id }}, this)">
+                                            <i data-lucide="check" style="width:12px;height:12px;"></i> Complete
+                                        </button>
+                                        {% elif booking.status == 'pending' %}
+                                        <button class="btn btn-danger btn-sm" onclick="cancelBooking({{ booking.id }}, this)">
+                                            <i data-lucide="x" style="width:12px;height:12px;"></i> Cancel
+                                        </button>
+                                        {% elif booking.status == 'completed' %}
+                                        <span style="font-size:0.8rem;color:var(--text-muted);">Done</span>
+                                        {% else %}
+                                        <span style="font-size:0.8rem;color:var(--text-muted);">—</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="glass-card empty-state">
+                        <i data-lucide="calendar" style="width:48px;height:48px;"></i>
+                        <p style="margin-top:var(--space-md);">No bookings yet. They'll appear here once customers start booking.</p>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Recent Messages -->
+                {% if messages %}
+                <div style="margin-bottom:var(--space-3xl);">
+                    <h3 style="margin-bottom:var(--space-lg);">Recent Messages</h3>
+                    <div style="display:grid;gap:var(--space-md);">
+                        {% for msg in messages %}
+                        <div class="glass-card" style="padding:var(--space-lg);">
+                            <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:var(--space-sm);">
+                                <div>
+                                    <strong style="color:var(--cream);">{{ msg.name }}</strong>
+                                    <span style="font-size:0.8rem;color:var(--text-muted);margin-left:var(--space-sm);">{{ msg.email }}</span>
+                                </div>
+                                <span style="font-size:0.75rem;color:var(--text-muted);">{{ msg.created_at.strftime('%b %d, %H:%M') }}</span>
+                            </div>
+                            <p style="font-size:0.9rem;color:var(--soft-lavender);margin:0;">{{ msg.message }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

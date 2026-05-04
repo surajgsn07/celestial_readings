@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Celestial Readings — Mystical astrology readings, Vedic tarot, and celestial guidance. Book your session and discover the stars' wisdom.">
+    <meta name="theme-color" content="#1a0a2e">
+    <title>{% block title %}Celestial Readings — Guiding You Through the Stars{% endblock %}</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+    {% block head %}{% endblock %}
+</head>
+<body>
+
+    <!-- Particle Canvas -->
+    <canvas id="particles-canvas"></canvas>
+
+
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="{{ url_for('home') }}" class="nav-logo">
+                <i data-lucide="sparkles" class="logo-icon"></i>
+                Celestial Readings
+            </a>
+            <div class="nav-links" id="navLinks">
+                <a href="{{ url_for('home') }}" class="{% if request.endpoint == 'home' %}active{% endif %}">Home</a>
+                <a href="{{ url_for('about') }}" class="{% if request.endpoint == 'about' %}active{% endif %}">About</a>
+                <a href="{{ url_for('services') }}" class="{% if request.endpoint == 'services' %}active{% endif %}">Services</a>
+                <a href="{{ url_for('track_booking') }}" class="{% if request.endpoint == 'track_booking' %}active{% endif %}">Track Booking</a>
+                <a href="{{ url_for('contact') }}" class="{% if request.endpoint == 'contact' %}active{% endif %}">Contact</a>
+                <a href="{{ url_for('booking') }}" class="nav-cta">Book a Session</a>
+            </div>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="page-content">
+        {% block content %}{% endblock %}
+
+        <!-- Footer -->
+        {% block footer %}
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-brand">
+                        <h3>✨ Celestial Readings</h3>
+                        <p>Guiding souls through the celestial tapestry, one reading at a time. Discover the magic the stars hold for you.</p>
+                    </div>
+                    <div class="footer-links">
+                        <h4>Navigate</h4>
+                        <a href="{{ url_for('home') }}">Home</a>
+                        <a href="{{ url_for('about') }}">About</a>
+                        <a href="{{ url_for('services') }}">Services</a>
+                        <a href="{{ url_for('booking') }}">Book Session</a>
+                        <a href="{{ url_for('track_booking') }}">Track Booking</a>
+                        <a href="{{ url_for('contact') }}">Contact</a>
+                    </div>
+                    <div class="footer-links">
+                        <h4>Services</h4>
+                        <a href="{{ url_for('services') }}">Vedic Tarot</a>
+                        <a href="{{ url_for('services') }}">Birth Chart</a>
+                        <a href="{{ url_for('services') }}">Relationship Reading</a>
+                        <a href="{{ url_for('services') }}">Tarot Reading</a>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <span>&copy; 2024 Celestial Readings. All rights reserved.</span>
+                    <div class="social-links">
+                        <a href="#" class="social-link" aria-label="Instagram" target="_blank">
+                            <i data-lucide="instagram" style="width:18px;height:18px;"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Twitter" target="_blank">
+                            <i data-lucide="twitter" style="width:18px;height:18px;"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="YouTube" target="_blank">
+                            <i data-lucide="youtube" style="width:18px;height:18px;"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        {% endblock %}
+    </div>
+
+    <!-- Main JS -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block scripts %}{% endblock %}
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+    </script>
+</body>
+</html>

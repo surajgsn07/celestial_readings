@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}Payment Successful — Celestial Readings{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+    <div class="container">
+        <span class="section-label">Confirmed</span>
+        <h1>Payment Successful! ✨</h1>
+    </div>
+</section>
+
+<section class="section" style="padding-top:0;">
+    <div class="container">
+        <div class="glass-card confirm-card">
+            <div class="icon-large success">
+                <i data-lucide="check-circle" style="width:40px;height:40px;"></i>
+            </div>
+            <h3 style="margin-bottom:var(--space-sm);color:#6fdc8c;">Booking Confirmed!</h3>
+            <p style="color:var(--soft-lavender);margin:0 auto var(--space-lg);font-size:0.95rem;">
+                Your session has been booked successfully. The stars are aligning for your reading!
+            </p>
+
+            <div class="confirm-details">
+                <div class="detail-row">
+                    <span class="detail-label">Booking ID</span>
+                    <span class="detail-value">#{{ booking.id }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Service</span>
+                    <span class="detail-value">{{ booking.service.name }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Date</span>
+                    <span class="detail-value">{{ booking.booking_date.strftime('%B %d, %Y') }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Time</span>
+                    <span class="detail-value">{{ booking.time_slot }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Status</span>
+                    <span class="detail-value"><span class="badge badge-confirmed">Confirmed</span></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Payment</span>
+                    <span class="detail-value"><span class="badge badge-paid">Paid</span></span>
+                </div>
+                <div class="detail-row total">
+                    <span class="detail-label">Amount Paid</span>
+                    <span class="detail-value">₹{{ "%.0f"|format(booking.amount) }}</span>
+                </div>
+            </div>
+
+            <div style="margin-top:var(--space-xl);padding:var(--space-lg);background:rgba(40,167,69,0.06);border-radius:var(--radius-md);border:1px solid rgba(40,167,69,0.15);">
+                <p style="font-size:0.85rem;color:#6fdc8c;margin:0 auto;">
+                    <strong>What's Next?</strong> You'll receive session details at <strong>{{ booking.email }}</strong>. 
+                    Please keep your birth details (date, time, place) ready if applicable.
+                </p>
+            </div>
+
+            <div style="display:flex;gap:var(--space-md);justify-content:center;margin-top:var(--space-xl);flex-wrap:wrap;">
+                <a href="{{ url_for('home') }}" class="btn btn-secondary">
+                    <i data-lucide="home" style="width:16px;height:16px;"></i>
+                    Back to Home
+                </a>
+                <a href="{{ url_for('services') }}" class="btn btn-primary">
+                    <i data-lucide="sparkles" style="width:16px;height:16px;"></i>
+                    Explore More Services
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

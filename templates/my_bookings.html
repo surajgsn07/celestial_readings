@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}My Bookings — Celestial Readings{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+    <div class="container">
+        <span class="section-label">Welcome Back</span>
+        <h1>My Bookings</h1>
+        <p>Here is your booking history for {{ email }}.</p>
+    </div>
+</section>
+
+<section class="section py-0 pb-large">
+    <div class="container">
+        <div class="dashboard-controls" style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center;">
+            <h2>Your Booking History</h2>
+            <a href="{{ url_for('track_booking') }}" class="btn btn-outline" style="padding: 0.5rem 1rem;">
+                <i data-lucide="arrow-left" style="width: 16px; height: 16px; margin-right: 0.5rem;"></i> Try Another Account
+            </a>
+        </div>
+
+        <div class="bookings-list" style="display: flex; flex-direction: column; gap: 1.5rem;">
+            {% for booking in bookings %}
+                <div class="booking-card" style="padding: 1.5rem; border: 1px solid rgba(255, 255, 255, 0.1);">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+                        <div>
+                            <h3 style="margin: 0; font-size: 1.25rem; color: #fff;">{{ booking.service.name }}</h3>
+                            <p style="margin: 0.25rem 0 0 0; color: #a1a1aa; font-size: 0.9rem;">
+                                Booking #{{ booking.id }} • {{ booking.created_at.strftime('%b %d, %Y') }}
+                            </p>
+                        </div>
+                        
+                        <div style="text-align: right;">
+                            <div style="margin-bottom: 0.5rem;">
+                                {% if booking.status == 'confirmed' %}
+                                    <span class="badge badge-confirmed"><i data-lucide="check-circle" style="width:14px; height:14px; margin-right:4px;"></i> Confirmed</span>
+                                {% elif booking.status == 'completed' %}
+                                    <span class="badge badge-completed"><i data-lucide="check-circle" style="width:14px; height:14px; margin-right:4px;"></i> Completed</span>
+                                {% elif booking.status == 'cancelled' %}
+                                    <span class="badge badge-cancelled"><i data-lucide="x-circle" style="width:14px; height:14px; margin-right:4px;"></i> Cancelled</span>
+                                {% elif booking.status == 'awaiting_verification' %}
+                                    <span class="badge badge-awaiting_verification"><i data-lucide="clock" style="width:14px; height:14px; margin-right:4px;"></i> Verifying Payment</span>
+                                {% else %}
+                                    <span class="badge badge-pending"><i data-lucide="clock" style="width:14px; height:14px; margin-right:4px;"></i> Pending</span>
+                                {% endif %}
+                            </div>
+                            <div style="font-size: 1.25rem; font-weight: 600; color: #ffd700;">₹{{ "%.0f"|format(booking.amount) }}</div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255, 255, 255, 0.05); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                        <div style="display: flex; gap: 2rem;">
+                            <div>
+                                <div style="font-size: 0.8rem; color: #a1a1aa; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem;">Appointment</div>
+                                <div style="color: #e4e4e7;">
+                                    <i data-lucide="calendar" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-right: 0.25rem;"></i>
+                                    {{ booking.booking_date.strftime('%b %d, %Y') }} at {{ booking.time_slot }}
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div style="font-size: 0.8rem; color: #a1a1aa; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem;">Payment</div>
+                                <div style="color: #e4e4e7; text-transform: capitalize;">
+                                    <i data-lucide="credit-card" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-right: 0.25rem;"></i>
+                                    {{ booking.payment_status.replace('_', ' ') }}
+                                </div>
+                            </div>
+                        </div>
+
+                        {% if booking.payment_status == 'unpaid' %}
+                            <a href="{{ url_for('booking_confirm', booking_id=booking.id) }}" class="btn btn-primary" style="padding: 0.5rem 1rem;">
+                                <i data-lucide="credit-card" style="width: 16px; height: 16px; margin-right: 0.5rem;"></i> Pay Now
+                            </a>
+                        {% elif booking.payment_status == 'awaiting_verification' %}
+                            <a href="{{ url_for('payment_pending', booking_id=booking.id) }}" class="btn btn-outline" style="padding: 0.5rem 1rem;">
+                                <i data-lucide="eye" style="width: 16px; height: 16px; margin-right: 0.5rem;"></i> View Status
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Services — Celestial Readings{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+    <div class="container">
+        <span class="section-label">Celestial Offerings</span>
+        <h1>Our Services</h1>
+        <p>Discover the perfect reading to illuminate your path</p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="grid-3">
+            {% for service in services %}
+            <div class="glass-card service-card animate-in" id="service-{{ service.id }}">
+                <div class="card-icon">
+                    <i data-lucide="{{ service.icon }}" style="width:28px;height:28px;"></i>
+                </div>
+                <h3>{{ service.name }}</h3>
+                <p style="font-size:0.88rem;color:var(--soft-lavender);margin-bottom:var(--space-lg);">{{ service.description }}</p>
+                <div class="card-meta">
+                    <span><i data-lucide="clock" style="width:14px;height:14px;"></i> {{ service.duration }} min</span>
+                    <span><i data-lucide="sparkles" style="width:14px;height:14px;"></i> {{ service.category|title }}</span>
+                </div>
+                <div class="card-price">₹{{ "%.0f"|format(service.price) }} <small>/session</small></div>
+                <a href="{{ url_for('booking', service_id=service.id) }}" class="btn btn-primary" id="book-service-{{ service.id }}">
+                    Book Now
+                    <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="section">
+    <div class="container">
+        <div class="section-header animate-in">
+            <span class="section-label">Questions</span>
+            <h2>Frequently Asked</h2>
+            <p>Common questions about our readings and sessions</p>
+        </div>
+
+        <div style="max-width:700px;margin:0 auto;">
+            <div class="glass-card animate-in" style="margin-bottom:var(--space-md);padding:var(--space-lg) var(--space-xl);">
+                <h4 style="margin-bottom:var(--space-sm);color:var(--gold);">How do sessions work?</h4>
+                <p style="font-size:0.9rem;">After booking and payment, you'll receive a confirmation with session details. Sessions are conducted via video call or phone as per your preference.</p>
+            </div>
+            <div class="glass-card animate-in" style="margin-bottom:var(--space-md);padding:var(--space-lg) var(--space-xl);">
+                <h4 style="margin-bottom:var(--space-sm);color:var(--gold);">What do I need for a birth chart reading?</h4>
+                <p style="font-size:0.9rem;">Your exact date, time, and place of birth. The more precise the birth time, the more accurate your reading will be.</p>
+            </div>
+            <div class="glass-card animate-in" style="margin-bottom:var(--space-md);padding:var(--space-lg) var(--space-xl);">
+                <h4 style="margin-bottom:var(--space-sm);color:var(--gold);">Can I reschedule my session?</h4>
+                <p style="font-size:0.9rem;">Yes! You can reschedule up to 24 hours before your appointment. Simply contact us through the contact page or Instagram.</p>
+            </div>
+            <div class="glass-card animate-in" style="padding:var(--space-lg) var(--space-xl);">
+                <h4 style="margin-bottom:var(--space-sm);color:var(--gold);">Is my information kept confidential?</h4>
+                <p style="font-size:0.9rem;">Absolutely. All sessions and personal information are strictly confidential. Your privacy is sacred to us.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,229 @@
+{% extends "base.html" %}
+{% block title %}Book a Session — Celestial Readings{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+    <div class="container">
+        <span class="section-label">Begin Your Journey</span>
+        <h1>Book Your Reading</h1>
+        <p>Select a service, pick your time, and step into the cosmic flow</p>
+    </div>
+</section>
+
+<section class="section" style="padding-top:0;">
+    <div class="container">
+        <!-- Progress Steps -->
+        <div class="booking-steps" id="bookingSteps">
+            <div class="step active" data-step="1">
+                <span class="step-number">1</span>
+                <span>Service</span>
+            </div>
+            <div class="step-connector"></div>
+            <div class="step" data-step="2">
+                <span class="step-number">2</span>
+                <span>Date & Time</span>
+            </div>
+            <div class="step-connector"></div>
+            <div class="step" data-step="3">
+                <span class="step-number">3</span>
+                <span>Details</span>
+            </div>
+            <div class="step-connector"></div>
+            <div class="step" data-step="4">
+                <span class="step-number">4</span>
+                <span>Review</span>
+            </div>
+        </div>
+
+        <!-- Step 1: Select Service -->
+        <div class="booking-step-content active" id="step1">
+            <div class="section-header" style="margin-bottom:var(--space-xl);">
+                <h3>Choose Your Reading</h3>
+                <p style="margin:var(--space-sm) auto 0;">Select the service that resonates with your soul</p>
+            </div>
+            <div class="service-select-grid">
+                {% for service in services %}
+                <div class="glass-card service-select-card {% if selected_service and selected_service.id == service.id %}selected{% endif %}"
+                     data-service-id="{{ service.id }}"
+                     data-service-name="{{ service.name }}"
+                     data-service-price="{{ service.price }}"
+                     data-service-duration="{{ service.duration }}"
+                     id="select-service-{{ service.id }}">
+                    <div style="display:flex;align-items:center;gap:var(--space-md);margin-bottom:var(--space-sm);">
+                        <div class="card-icon" style="width:40px;height:40px;margin:0;">
+                            <i data-lucide="{{ service.icon }}" style="width:20px;height:20px;"></i>
+                        </div>
+                        <h4>{{ service.name }}</h4>
+                    </div>
+                    <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:var(--space-sm);">{{ service.short_description }}</p>
+                    <div class="meta">
+                        <span><i data-lucide="clock" style="width:12px;height:12px;"></i> {{ service.duration }} min</span>
+                    </div>
+                    <div class="price">₹{{ "%.0f"|format(service.price) }}</div>
+                </div>
+                {% endfor %}
+            </div>
+            <div style="text-align:center;margin-top:var(--space-2xl);">
+                <button class="btn btn-primary btn-lg" id="toStep2" disabled>
+                    Continue
+                    <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 2: Date & Time -->
+        <div class="booking-step-content" id="step2">
+            <div style="max-width:600px;margin:0 auto;">
+                <div class="section-header" style="margin-bottom:var(--space-xl);">
+                    <h3>Pick Your Date & Time</h3>
+                    <p style="margin:var(--space-sm) auto 0;">Choose when the stars align for you</p>
+                </div>
+
+                <div class="glass-card" style="margin-bottom:var(--space-xl);">
+                    <div class="calendar" id="calendar">
+                        <div class="calendar-header">
+                            <button class="calendar-nav" id="prevMonth" aria-label="Previous month">
+                                <i data-lucide="chevron-left" style="width:18px;height:18px;"></i>
+                            </button>
+                            <h3 id="calendarTitle"></h3>
+                            <button class="calendar-nav" id="nextMonth" aria-label="Next month">
+                                <i data-lucide="chevron-right" style="width:18px;height:18px;"></i>
+                            </button>
+                        </div>
+                        <div class="calendar-weekdays">
+                            <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span>
+                            <span>Thu</span><span>Fri</span><span>Sat</span>
+                        </div>
+                        <div class="calendar-days" id="calendarDays"></div>
+                    </div>
+                </div>
+
+                <div id="timeSlotsContainer" style="display:none;">
+                    <h4 style="margin-bottom:var(--space-md);color:var(--lavender);">
+                        Available Time Slots for <span id="selectedDateDisplay"></span>
+                    </h4>
+                    <div class="time-slots" id="timeSlots"></div>
+                    <div id="noSlots" style="display:none;" class="empty-state">
+                        <p>No available slots for this date. Please choose another date.</p>
+                    </div>
+                </div>
+
+                <div style="display:flex;gap:var(--space-md);justify-content:center;margin-top:var(--space-2xl);">
+                    <button class="btn btn-secondary" id="backToStep1">
+                        <i data-lucide="arrow-left" style="width:16px;height:16px;"></i>
+                        Back
+                    </button>
+                    <button class="btn btn-primary btn-lg" id="toStep3" disabled>
+                        Continue
+                        <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Personal Details -->
+        <div class="booking-step-content" id="step3">
+            <div style="max-width:500px;margin:0 auto;">
+                <div class="section-header" style="margin-bottom:var(--space-xl);">
+                    <h3>Your Details</h3>
+                    <p style="margin:var(--space-sm) auto 0;">Tell us a bit about yourself</p>
+                </div>
+
+                <div class="glass-card">
+                    <form id="detailsForm">
+                        <div class="form-group">
+                            <label for="customerName">Full Name *</label>
+                            <input type="text" id="customerName" class="form-control" placeholder="Enter your full name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="customerEmail">Email Address *</label>
+                            <input type="email" id="customerEmail" class="form-control" placeholder="your@email.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="customerPhone">Phone Number *</label>
+                            <input type="tel" id="customerPhone" class="form-control" placeholder="+91 XXXXX XXXXX" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="customerNotes">Additional Notes (optional)</label>
+                            <textarea id="customerNotes" class="form-control" placeholder="Any questions or specific areas you'd like to explore..." rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+
+                <div style="display:flex;gap:var(--space-md);justify-content:center;margin-top:var(--space-2xl);">
+                    <button class="btn btn-secondary" id="backToStep2">
+                        <i data-lucide="arrow-left" style="width:16px;height:16px;"></i>
+                        Back
+                    </button>
+                    <button class="btn btn-primary btn-lg" id="toStep4">
+                        Review Booking
+                        <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 4: Review -->
+        <div class="booking-step-content" id="step4">
+            <div style="max-width:500px;margin:0 auto;">
+                <div class="section-header" style="margin-bottom:var(--space-xl);">
+                    <h3>Review Your Booking</h3>
+                    <p style="margin:var(--space-sm) auto 0;">Confirm everything looks right before proceeding to payment</p>
+                </div>
+
+                <div class="glass-card confirm-card" style="text-align:left;max-width:100%;">
+                    <div class="confirm-details" style="margin:0;background:transparent;border:none;padding:0;">
+                        <div class="detail-row">
+                            <span class="detail-label">Service</span>
+                            <span class="detail-value" id="reviewService">—</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Date</span>
+                            <span class="detail-value" id="reviewDate">—</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Time</span>
+                            <span class="detail-value" id="reviewTime">—</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Duration</span>
+                            <span class="detail-value" id="reviewDuration">—</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Name</span>
+                            <span class="detail-value" id="reviewName">—</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Email</span>
+                            <span class="detail-value" id="reviewEmail">—</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Phone</span>
+                            <span class="detail-value" id="reviewPhone">—</span>
+                        </div>
+                        <div class="detail-row total">
+                            <span class="detail-label">Total</span>
+                            <span class="detail-value" id="reviewTotal">—</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display:flex;gap:var(--space-md);justify-content:center;margin-top:var(--space-2xl);">
+                    <button class="btn btn-secondary" id="backToStep3">
+                        <i data-lucide="arrow-left" style="width:16px;height:16px;"></i>
+                        Back
+                    </button>
+                    <button class="btn btn-primary btn-lg" id="submitBooking">
+                        <i data-lucide="credit-card" style="width:18px;height:18px;"></i>
+                        Proceed to Payment
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/booking.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% block title %}Celestial Readings — Guiding You Through the Stars ✨{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero" id="hero">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <div class="hero-content">
+        <span class="hero-badge">✦ Astrology & Tarot ✦</span>
+        <h1 class="text-gradient">Celestial Readings</h1>
+        <p class="tagline">"Guiding you through the stars ✨"</p>
+        <div class="hero-buttons">
+            <a href="{{ url_for('booking') }}" class="btn btn-primary btn-lg">
+                <i data-lucide="calendar" style="width:18px;height:18px;"></i>
+                Book a Session
+            </a>
+            <a href="{{ url_for('services') }}" class="btn btn-secondary btn-lg">
+                <i data-lucide="sparkles" style="width:18px;height:18px;"></i>
+                Explore Services
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- About Preview -->
+<section class="section" id="about-preview">
+    <div class="container">
+        <div class="about-grid animate-in">
+            <div class="about-image">
+                <div class="glass-card" style="padding: var(--space-3xl); text-align: center;">
+                    <i data-lucide="moon" style="width:80px;height:80px;color:var(--gold);opacity:0.8;margin-bottom:var(--space-lg);"></i>
+                    <h3 style="font-size:1.2rem;color:var(--gold);">The Stars Speak</h3>
+                    <p style="margin:var(--space-md) auto 0;font-size:0.9rem;">Through ancient wisdom and celestial guidance</p>
+                </div>
+            </div>
+            <div class="about-text">
+                <span class="section-label">About the Astrologer</span>
+                <h2>Where Magic Meets the Cosmos</h2>
+                <p>Welcome to Celestial Readings — a sacred space where the ancient arts of astrology and tarot intertwine with modern intuition to illuminate your life's path.</p>
+                <p>With years of dedicated study in Vedic astrology and intuitive tarot reading, I guide seekers through the celestial tapestry, helping them discover their true purpose, navigate life's crossroads, and embrace the magic that lies within.</p>
+                <a href="{{ url_for('about') }}" class="btn btn-ghost" style="margin-top:var(--space-lg);">
+                    Read My Story
+                    <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Highlight -->
+<section class="section" id="services-highlight">
+    <div class="container">
+        <div class="section-header animate-in">
+            <span class="section-label">Celestial Offerings</span>
+            <h2>Services Crafted by the Stars</h2>
+            <p>Each reading is a unique journey through the cosmic landscape of your life</p>
+        </div>
+
+        <div class="grid-3">
+            {% for service in services %}
+            <div class="glass-card service-card animate-in">
+                <div class="card-icon">
+                    <i data-lucide="{{ service.icon }}" style="width:28px;height:28px;"></i>
+                </div>
+                <h3>{{ service.name }}</h3>
+                <p>{{ service.short_description }}</p>
+                <div class="card-meta">
+                    <span><i data-lucide="clock" style="width:14px;height:14px;"></i> {{ service.duration }} min</span>
+                    <span><i data-lucide="sparkles" style="width:14px;height:14px;"></i> {{ service.category|title }}</span>
+                </div>
+                <div class="card-price">₹{{ "%.0f"|format(service.price) }} <small>/session</small></div>
+                <a href="{{ url_for('booking', service_id=service.id) }}" class="btn btn-primary">
+                    Book Now
+                    <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div style="text-align:center;margin-top:var(--space-2xl);" class="animate-in">
+            <a href="{{ url_for('services') }}" class="btn btn-secondary">
+                View All Services
+                <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials -->
+<section class="section" id="testimonials">
+    <div class="container">
+        <div class="section-header animate-in">
+            <span class="section-label">Cosmic Whispers</span>
+            <h2>Words from the Stars</h2>
+            <p>What seekers say about their journey with Celestial Readings</p>
+        </div>
+
+        <div class="grid-3">
+            <div class="glass-card testimonial-card animate-in">
+                <div class="stars">★★★★★</div>
+                <blockquote>"The tarot reading was incredibly accurate and deeply healing. I felt truly seen and understood. The insights have guided me through one of the toughest periods of my life."</blockquote>
+                <div class="author">— Priya M.</div>
+            </div>
+            <div class="glass-card testimonial-card animate-in">
+                <div class="stars">★★★★★</div>
+                <blockquote>"My birth chart analysis was mind-blowing! The level of detail and the accuracy of the personality insights left me speechless. Truly a gifted astrologer."</blockquote>
+                <div class="author">— Arjun S.</div>
+            </div>
+            <div class="glass-card testimonial-card animate-in">
+                <div class="stars">★★★★★</div>
+                <blockquote>"The relationship guidance session saved my marriage. Understanding our cosmic compatibility gave us a new perspective. Forever grateful to Celestial Readings."</blockquote>
+                <div class="author">— Meera & Rohan K.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+    <div class="container">
+        <div class="cta-box animate-in">
+            <span class="section-label">Begin Your Journey</span>
+            <h2>Ready to Discover What the Stars Hold?</h2>
+            <p>Book your personalized reading today and step into the magic of self-discovery</p>
+            <a href="{{ url_for('booking') }}" class="btn btn-primary btn-lg">
+                <i data-lucide="sparkles" style="width:18px;height:18px;"></i>
+                Book Your Reading
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

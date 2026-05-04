@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Payment Failed — Celestial Readings{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+    <div class="container">
+        <span class="section-label">Oops</span>
+        <h1>Payment Failed</h1>
+    </div>
+</section>
+
+<section class="section" style="padding-top:0;">
+    <div class="container">
+        <div class="glass-card confirm-card">
+            <div class="icon-large failure">
+                <i data-lucide="x-circle" style="width:40px;height:40px;"></i>
+            </div>
+            <h3 style="margin-bottom:var(--space-sm);color:#ff6b7a;">Payment Unsuccessful</h3>
+            <p style="color:var(--soft-lavender);margin:0 auto var(--space-lg);font-size:0.95rem;">
+                Something went wrong with your payment. Don't worry — your booking is saved and you can try again.
+            </p>
+
+            <div class="confirm-details">
+                <div class="detail-row">
+                    <span class="detail-label">Service</span>
+                    <span class="detail-value">{{ booking.service.name }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Date</span>
+                    <span class="detail-value">{{ booking.booking_date.strftime('%B %d, %Y') }}</span>
+                </div>
+                <div class="detail-row total">
+                    <span class="detail-label">Amount</span>
+                    <span class="detail-value">₹{{ "%.0f"|format(booking.amount) }}</span>
+                </div>
+            </div>
+
+            <div style="display:flex;gap:var(--space-md);justify-content:center;margin-top:var(--space-xl);flex-wrap:wrap;">
+                <a href="{{ url_for('booking_confirm', booking_id=booking.id) }}" class="btn btn-primary btn-lg">
+                    <i data-lucide="refresh-cw" style="width:16px;height:16px;"></i>
+                    Try Again
+                </a>
+                <a href="{{ url_for('contact') }}" class="btn btn-secondary">
+                    <i data-lucide="message-circle" style="width:16px;height:16px;"></i>
+                    Contact Support
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
