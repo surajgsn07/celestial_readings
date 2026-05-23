@@ -9,3 +9,21 @@ services:
       - .env
     environment:
       - FLASK_ENV=development
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15-alpine
+    container_name: tinkrbell_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: tinkrbell_db
+      POSTGRES_USER: tinkrbell
+      POSTGRES_PASSWORD: tinkrbell_pass
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_data:
