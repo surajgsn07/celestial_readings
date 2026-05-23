@@ -29,81 +29,86 @@ def load_user(user_id):
 # ─── Seed Data ─────────────────────────────────────────────────
 def seed_data():
     """Seed default admin and services if they don't exist."""
-    # Create or update admin from environment variables
-    admin_username = app.config["ADMIN_USERNAME"]
-    admin_password = app.config["ADMIN_PASSWORD"]
-    
-    admin = Admin.query.filter_by(username=admin_username).first()
-    if not admin:
-        admin = Admin(username=admin_username)
-        admin.set_password(admin_password)
-        db.session.add(admin)
-    else:
-        # Update password if changed in .env
-        admin.set_password(admin_password)
+    try:
+        # Create or update admin from environment variables
+        admin_username = app.config["ADMIN_USERNAME"]
+        admin_password = app.config["ADMIN_PASSWORD"]
+        
+        admin = Admin.query.filter_by(username=admin_username).first()
+        if not admin:
+            admin = Admin(username=admin_username)
+            admin.set_password(admin_password)
+            db.session.add(admin)
+        else:
+            # Update password if changed in .env
+            admin.set_password(admin_password)
 
-    # Create services
-    if Service.query.count() == 0:
-        services = [
-            Service(
-                name="Vedic Tarot Reading",
-                slug="vedic-tarot-reading",
-                description="Unlock the ancient wisdom of Vedic Tarot to gain deep insights into your life path, karmic patterns, and spiritual journey. This session combines traditional tarot symbolism with Vedic astrology principles for a truly transformative experience. Each card drawn reveals layers of meaning connected to your unique cosmic blueprint.",
-                short_description="Ancient Vedic wisdom meets tarot for deep life path insights",
-                duration=60,
-                price=1499.00,
-                icon="sparkles",
-                category="tarot",
-                display_order=1,
-            ),
-            Service(
-                name="Birth Chart Analysis",
-                slug="birth-chart-analysis",
-                description="A comprehensive analysis of your natal chart revealing your personality traits, life purpose, strengths, challenges, and the cosmic energies that shape your destiny. We'll explore your sun, moon, and rising signs along with planetary placements to paint a complete picture of your astrological DNA.",
-                short_description="Complete natal chart reading revealing your cosmic blueprint",
-                duration=90,
-                price=2499.00,
-                icon="sun",
-                category="astrology",
-                display_order=2,
-            ),
-            Service(
-                name="Relationship Guidance",
-                slug="relationship-guidance",
-                description="Explore the cosmic compatibility between you and your partner through synastry chart analysis. Understand the strengths, challenges, and karmic connections in your relationship. This session helps illuminate the deeper spiritual purpose of your bond and offers guidance for harmony.",
-                short_description="Synastry analysis for cosmic compatibility & harmony",
-                duration=60,
-                price=1999.00,
-                icon="heart",
-                category="astrology",
-                display_order=3,
-            ),
-            Service(
-                name="Tarot Reading",
-                slug="tarot-reading",
-                description="A classic intuitive tarot reading to answer your most pressing questions. Whether it's about love, career, finances, or personal growth — the cards will illuminate the path ahead. Each spread is custom-designed for your specific situation and delivered with compassionate clarity.",
-                short_description="Intuitive tarot guidance for life's pressing questions",
-                duration=45,
-                price=999.00,
-                icon="star",
-                category="tarot",
-                display_order=4,
-            ),
-            Service(
-                name="Custom Spiritual Session",
-                slug="custom-spiritual-session",
-                description="A personalized session tailored to your unique needs. Whether you seek a combination of tarot and astrology, a deep-dive into a specific life area, or ongoing spiritual mentorship — this session is crafted just for you. We'll discuss your goals beforehand to design the perfect experience.",
-                short_description="Bespoke session designed around your unique spiritual needs",
-                duration=120,
-                price=2999.00,
-                icon="wand-2",
-                category="custom",
-                display_order=5,
-            ),
-        ]
-        db.session.add_all(services)
+        # Create services only if none exist
+        if Service.query.count() == 0:
+            services = [
+                Service(
+                    name="Vedic Tarot Reading",
+                    slug="vedic-tarot-reading",
+                    description="Unlock the ancient wisdom of Vedic Tarot to gain deep insights into your life path, karmic patterns, and spiritual journey. This session combines traditional tarot symbolism with Vedic astrology principles for a truly transformative experience. Each card drawn reveals layers of meaning connected to your unique cosmic blueprint.",
+                    short_description="Ancient Vedic wisdom meets tarot for deep life path insights",
+                    duration=60,
+                    price=1499.00,
+                    icon="sparkles",
+                    category="tarot",
+                    display_order=1,
+                ),
+                Service(
+                    name="Birth Chart Analysis",
+                    slug="birth-chart-analysis",
+                    description="A comprehensive analysis of your natal chart revealing your personality traits, life purpose, strengths, challenges, and the cosmic energies that shape your destiny. We'll explore your sun, moon, and rising signs along with planetary placements to paint a complete picture of your astrological DNA.",
+                    short_description="Complete natal chart reading revealing your cosmic blueprint",
+                    duration=90,
+                    price=2499.00,
+                    icon="sun",
+                    category="astrology",
+                    display_order=2,
+                ),
+                Service(
+                    name="Relationship Guidance",
+                    slug="relationship-guidance",
+                    description="Explore the cosmic compatibility between you and your partner through synastry chart analysis. Understand the strengths, challenges, and karmic connections in your relationship. This session helps illuminate the deeper spiritual purpose of your bond and offers guidance for harmony.",
+                    short_description="Synastry analysis for cosmic compatibility & harmony",
+                    duration=60,
+                    price=1999.00,
+                    icon="heart",
+                    category="astrology",
+                    display_order=3,
+                ),
+                Service(
+                    name="Tarot Reading",
+                    slug="tarot-reading",
+                    description="A classic intuitive tarot reading to answer your most pressing questions. Whether it's about love, career, finances, or personal growth — the cards will illuminate the path ahead. Each spread is custom-designed for your specific situation and delivered with compassionate clarity.",
+                    short_description="Intuitive tarot guidance for life's pressing questions",
+                    duration=45,
+                    price=999.00,
+                    icon="star",
+                    category="tarot",
+                    display_order=4,
+                ),
+                Service(
+                    name="Custom Spiritual Session",
+                    slug="custom-spiritual-session",
+                    description="A personalized session tailored to your unique needs. Whether you seek a combination of tarot and astrology, a deep-dive into a specific life area, or ongoing spiritual mentorship — this session is crafted just for you. We'll discuss your goals beforehand to design the perfect experience.",
+                    short_description="Bespoke session designed around your unique spiritual needs",
+                    duration=120,
+                    price=2999.00,
+                    icon="wand-2",
+                    category="custom",
+                    display_order=5,
+                ),
+            ]
+            db.session.add_all(services)
 
-    db.session.commit()
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        app.logger.error(f"Error seeding data: {e}")
+        # Don't fail the app startup if seeding fails
 
 
 # ─── PUBLIC ROUTES ─────────────────────────────────────────────
